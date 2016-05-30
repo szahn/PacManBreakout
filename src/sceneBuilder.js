@@ -12,6 +12,7 @@ class SceneBuilder {
         var geometry = new THREE.BoxGeometry(.5, .5, .5);
         var material = new THREE.MeshLambertMaterial( { color: color, map: textures.get(textureId) } );
         var wall = new THREE.Mesh( geometry, material );
+        wall.userData.canSplit = true;
         wall.position.set(x, y, z);
         wall.userData.box = new THREE.Box3().setFromObject(wall);
         wall.name = "wall";

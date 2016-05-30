@@ -1,6 +1,6 @@
 class Log{
     static debug(msg){
-        console.log(msg);
+        //console.log(msg);
     }
 }
 

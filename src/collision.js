@@ -27,22 +27,23 @@ function boxIntersectsWithXY(a, b, dX, dY){
 }
 
 function intersectRaysFirst(pos, bounds, vX, vY, items){    
-    var rays = [[pos.clone(), new THREE.Vector3(vX, vY, 0).normalize()]];
+    let v = new THREE.Vector3(vX, vY, 0).normalize();
+    var rays = [[pos.clone()]];
     
     if (vX < 0 || vX > 0){
-        rays.push([new THREE.Vector3(pos.x, pos.y - bounds, pos.z), new THREE.Vector3(vX, vY, 0).normalize()]);
-        rays.push([new THREE.Vector3(pos.x, pos.y + bounds, pos.z), new THREE.Vector3(vX, vY, 0).normalize()]);
+        rays.push(new THREE.Vector3(pos.x, pos.y - bounds, pos.z));
+        rays.push(new THREE.Vector3(pos.x, pos.y + bounds, pos.z));
     }
 
     if (vY < 0 || vY > 0){
-        rays.push([new THREE.Vector3(pos.x- bounds, pos.y, pos.z), new THREE.Vector3(vX, vY, 0).normalize()]);
-        rays.push([new THREE.Vector3(pos.x+ bounds, pos.y, pos.z), new THREE.Vector3(vX, vY, 0).normalize()]);
+        rays.push(new THREE.Vector3(pos.x- bounds, pos.y, pos.z));
+        rays.push(new THREE.Vector3(pos.x+ bounds, pos.y, pos.z));
     }
     
     var intersection = null;
     for (let i = 0 ; i < rays.length; i++){
         let ray = rays[i];
-        rayCaster.set(ray[0], ray[1]);
+        rayCaster.set(ray, v);
         let intersections = rayCaster.intersectObjects(items, false);
         if (intersections.length){
             intersection = intersections[0];
@@ -131,25 +132,54 @@ class Collision {
         var intersects = rayIntersects && rayIntersects.distance <= bounds;
         if (intersects){
             var wall = rayIntersects.object;
-            var c = wall.material.color;
+                       
+            let groupWalls = group["walls"];
+            for (let i =0; i < groupWalls.length; i++){
+                if (groupWalls[i] && groupWalls[i].id == wall.id){
+                    scene.removeInGroup(groupId, "walls", i);
+                    break;
+                }
+            }
+                    
+            if (wall.userData.canSplit){
+                sounds.play("bump");
+                let x1 = wall.position.x - .1;
+                let y1 = wall.position.y - .1;
+                for (let x = 0; x < .5; x += .25)
+                {
+                    for (let y = 0; y < .5; y += .25)
+                    {
+                        var w = wall.clone();
+                        w.userData.canSplit = false;
+                        w.scale.set(.5, .5, 1);
+                        w.position.set(x1 + x, y1 + y , wall.position.z);
+                        scene.register(w, "walls", groupId);
+                    }
+                }
+            }
+            else{
+                sounds.play("destroy");
+            }
+
+            scene.remove(wall);
+
+            /*var c = wall.material.color;
             var r = c.r * .5;
             var g =  c.g * .5;
             var b = c.b * .5;
             if (r < .5 && g < .5 && b < .5){
-                sounds.play("destroy");
                 let groupWalls = group["walls"];
                 for (let i =0; i < groupWalls.length; i++){
                     if (groupWalls[i] && groupWalls[i].id == wall.id){
-                        scene.removeInGroup(groupId, "walls", i);
                         break;
                     }
                 }
                 scene.remove(wall);
             }
             else{
-                sounds.play("bump");
                 wall.material.color = new THREE.Color(r, g, b);
-            }            
+            } */
+                       
             return true;                
         }
 
