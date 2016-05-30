@@ -1,4 +1,5 @@
 var sceneBuilder = require("./sceneBuilder");
+var scene = require("./scene");
 var player = require("./player");
 var camera = require("./camera");
 var Promise = require("bluebird");
@@ -6,10 +7,15 @@ var Promise = require("bluebird");
 class Level{
     
     constructor(){
+        this.reset();
+    }
+    
+    reset(){
         this.totalCoins = 0;
     }
     
     makeLevel(levelUrl){
+        scene.reset();
         var portalColors = ["#00f", "#f0f", "#0f0"]
         return new Promise((resolve, reject)=>{
             $.get(levelUrl, (data)=>{
@@ -48,7 +54,7 @@ class Level{
                             }
                             else if (cellId == 9){
                                 this.totalCoins += 1;
-                                sceneBuilder.makeCoin(floorId, sceneX, sceneY, 0, 0xffffff);
+                                sceneBuilder.makeCoin(floorId, sceneX, sceneY, 0, "#ffbf00");
                             }
                             else if (cellId[0] == "t"){
                                 var portalIndex = parseInt(cellId[1], 10);

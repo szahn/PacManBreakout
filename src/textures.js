@@ -5,7 +5,7 @@ class Textures{
     constructor(){
         this.textures = {};
         this.loader = new THREE.TextureLoader();
-        this.texturesToLoad = 10;
+        this.texturesToLoad = 8;
     }
     
     get(id){
@@ -33,15 +33,13 @@ class Textures{
     }
     
     load(){
-        return Promise.all([this.loadTexture("gold", "assets/gold.jpg"),
-            this.loadTexture("floor0", "assets/floor0.png"),
+        return Promise.all([this.loadTexture("floor0", "assets/floor0.png"),
             this.loadTexture("floor1", "assets/floor1.png"),
             this.loadTexture("wall0", "assets/wall0.png"),
             this.loadTexture("wall1", "assets/wall1.png"),
             this.loadTexture("wall2", "assets/wall2.png"),
             this.loadTexture("wall3", "assets/wall3.jpg"),
             this.loadTexture("wall4", "assets/wall4.png"),
-            this.loadTexture("ball", "assets/ball.jpg"),
             this.loadTexture("portal", "assets/portal.png")]);
     }
     

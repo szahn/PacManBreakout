@@ -20,8 +20,8 @@ class SceneBuilder {
     
     makeCoin(groupId, x, y, z, color, isPowerup){
         var geometry = new THREE.TorusGeometry( 10, 4, 14, 24 );
-        geometry.scale(.014, .014, .014);
-        var material = new THREE.MeshPhongMaterial( { color: color, shading: THREE.SmoothShading, shininess: 80, map: textures.get('gold') } );
+        geometry.scale(.01, .01, .01);
+        var material = new THREE.MeshPhongMaterial( { color: color, shading: THREE.SmoothShading, shininess: 50} );
         var coin  = new THREE.Mesh( geometry, material );
         coin.name = isPowerup ? "powerup" : "coin";
         coin.position.set(x, y, z);
@@ -30,8 +30,8 @@ class SceneBuilder {
     }
     
     makeSphere(name, x, y, z, color){
-        var geometry = new THREE.SphereGeometry( .20, 16, 16 );
-        var material = new THREE.MeshPhongMaterial( {color: color, shading: THREE.SmoothShading, shininess: 80} );
+        var geometry = new THREE.SphereGeometry( .16, 16, 16 );
+        var material = new THREE.MeshPhongMaterial( {color: color, shading: THREE.SmoothShading, shininess: 50} );
         var sphere = new THREE.Mesh( geometry, material );
         sphere.position.set(x, y, z);
         sphere.name = name;
@@ -41,9 +41,8 @@ class SceneBuilder {
     }
     
     makePointLight(x, y, color, size){
-        var plight = new THREE.PointLight( color, 2, size);
+        var plight = new THREE.PointLight( color, 5, size);
         plight.position.set( x, y, .5);
-        plight.penumbra =.2;
         scene.register( plight );    
         return plight;
     }
@@ -67,7 +66,7 @@ class SceneBuilder {
     
     makePlayer(x, y){    
         return {
-            light: this.makePointLight(x, y, 0xffffff, 3),
+            light: this.makePointLight(x, y, 0xffffff, 2),
             mesh: this.makeSphere("player", x, y, 0, 0xffff00) 
         };
     }
@@ -87,6 +86,7 @@ class SceneBuilder {
     
     makeGoul(x, y, z){
         var ghoul = this.makeSphere("goul", x, y, z, "#ff0000");
+        ghoul.children.push(this.makePointLight(x, y, 0xff0000, 1));
         ghoul.userData.direction = -1;
         ghoul.userData.nextDirection = getRandomInt(0, 3);
         ghoul.userData.playerMoveTimer = 0;

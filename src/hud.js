@@ -112,11 +112,6 @@ class HUD {
     }
     
     drawCopyright(){
-        let ctx = this.context;       
-        let charX = 2;
-        let charY = this.height - 10;
-        ctx.drawImage(this.font, 312, 32, 8, 8, charX, charY, 8, 8);        
-        this.drawText("Stuart Zahn", charX + 10, charY, 4);
     }
 
     draw(){
@@ -137,8 +132,8 @@ class HUD {
             case 2:{
                 this.drawBackdrop();
                 this.drawTitle();
-                let y = 30;
-                this.drawText("How to Play", this.width / 2, y, 0, "center");            
+                let y = 35;
+                this.drawText("Level 01", this.width / 2, y, 0, "center");            
                 this.drawText("Collect all coins to win", this.width / 2, y + 20, 3, "center");            
                 this.drawText("Use Arrow Keys/or Gamepad to move", 10, y + 35, 4);            
                 this.drawText("Gather powerups/to kill ghouls", 10, y + 55, 4);            
@@ -178,6 +173,11 @@ class HUD {
             case 4:{
                 ctx.clearRect(0, 0, this.width, this.height);
                 this.drawText("Paused", this.width / 2, this.height / 2 - 10, 0, "center");            
+                break;
+            }
+            case 5:{
+                ctx.clearRect(0, 0, this.width, this.height);
+                this.drawText("Please Wait", this.width / 2, this.height / 2 - 10, 0, "center");            
                 break;
             }
         }

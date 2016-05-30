@@ -1,5 +1,9 @@
 class Player{
     constructor(){
+        this.reset();
+    }
+    
+    reset(){
         this.direction = -1;
         this.nextDirection = -1;
         this.powerTimer = 0;

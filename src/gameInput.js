@@ -1,6 +1,6 @@
-var log = require("./log");
 var gameDebugger = require("./gameDebugger");
 var gameState = require("./gameState");
+var player = require("./player");
 
 const KEY_ENTER = 13;
 const KEY_D = 68;
@@ -29,15 +29,8 @@ class GameInput{
     }
 
     onKeyPress(keyCode, isPressed){
-        log.debug(`Pressed ${keyCode} ${isPressed}`);
         if (gameState.state === 1){
             switch (keyCode){
-                case KEY_D:{
-                    if (isPressed){
-                        gameDebugger.toggleDebugInfo();        
-                    }
-                    break;
-                }
                 case KEY_LEFT:{
                     this.keys.isLeft = isPressed;
                     break;
@@ -54,13 +47,29 @@ class GameInput{
                     this.keys.isDown = isPressed;
                     break;
                 }
-            }
+                case KEY_ENTER:{
+                    if (isPressed && !player.isAlive){
+                        gameState.restartLevel();
+                    }
+                    break;
+                }
+            }            
         }
         else if (gameState.state === 2){
             switch (keyCode){
                 case KEY_ENTER:{
                     if (isPressed){
                         gameState.start();
+                    }
+                    break;
+                }
+            }
+        }
+        else if (gameState.state === 3){
+            switch (keyCode){
+                case KEY_ENTER:{
+                    if (isPressed){
+                        //TODO: continue to next level
                     }
                     break;
                 }

@@ -5,6 +5,10 @@ var log = require("./log");
 var sounds = require("./sounds");
 var gameState = require("./gameState");
 
+var rayCaster = new THREE.Raycaster();
+rayCaster.near = 0;
+rayCaster.far = 1;
+
 function boxIntersectsWithXY(a, b, dX, dY){
     if (dX < 0){
         
@@ -20,6 +24,33 @@ function boxIntersectsWithXY(a, b, dX, dY){
         a.max.x + (dX || 0) >= b.min.x &&
         a.min.y - (dY || 0) <= b.max.y &&
         a.max.y + (dY || 0) >= b.min.y)    
+}
+
+function intersectRaysFirst(pos, bounds, vX, vY, items){    
+    var rays = [[pos.clone(), new THREE.Vector3(vX, vY, 0).normalize()]];
+    
+    if (vX < 0 || vX > 0){
+        rays.push([new THREE.Vector3(pos.x, pos.y - bounds, pos.z), new THREE.Vector3(vX, vY, 0).normalize()]);
+        rays.push([new THREE.Vector3(pos.x, pos.y + bounds, pos.z), new THREE.Vector3(vX, vY, 0).normalize()]);
+    }
+
+    if (vY < 0 || vY > 0){
+        rays.push([new THREE.Vector3(pos.x- bounds, pos.y, pos.z), new THREE.Vector3(vX, vY, 0).normalize()]);
+        rays.push([new THREE.Vector3(pos.x+ bounds, pos.y, pos.z), new THREE.Vector3(vX, vY, 0).normalize()]);
+    }
+    
+    var intersection = null;
+    for (let i = 0 ; i < rays.length; i++){
+        let ray = rays[i];
+        rayCaster.set(ray[0], ray[1]);
+        let intersections = rayCaster.intersectObjects(items, false);
+        if (intersections.length){
+            intersection = intersections[0];
+            break;
+        }
+    }
+    
+    return intersection;
 }
 
 class Collision {
@@ -57,6 +88,7 @@ class Collision {
                         }
                         
                         ghoul.material.color = new THREE.Color(1,0,1);
+                        ghoul.children[0].color = new THREE.Color(1,0,1);
                     }
 
                 }
@@ -93,16 +125,12 @@ class Collision {
             if (w){walls.push(w);}
         });
         
-        var direction = new THREE.Vector3(vX, vY, 0);
-        var ray = new THREE.Raycaster(player.objects.mesh.position.clone(), direction.clone().normalize(), 0, 1); 
+        var rayIntersects = intersectRaysFirst(player.objects.mesh.position, .16, vX, vY, walls)
         
         var bounds = (.30);
-        
-        var rayIntersects = ray.intersectObjects(walls, false)
-        
-        var intersects = rayIntersects.length && rayIntersects[0].distance <= bounds;
+        var intersects = rayIntersects && rayIntersects.distance <= bounds;
         if (intersects){
-            var wall = rayIntersects[0].object;
+            var wall = rayIntersects.object;
             var c = wall.material.color;
             var r = c.r * .5;
             var g =  c.g * .5;
@@ -135,16 +163,11 @@ class Collision {
         group["walls"].forEach((w)=>{
             if (w){walls.push(w);}
         });
-        
-       
-        var direction = new THREE.Vector3(vX, vY, 0);
-        var ray = new THREE.Raycaster(ghoul.position.clone(), direction.clone().normalize(), 0, 1); 
+               
+        var rayIntersects = intersectRaysFirst(ghoul.position, .16,vX, vY, walls);
         
         var bounds = (.30);
-        
-        var rayIntersects = ray.intersectObjects(walls, false)
-        
-        var intersects = rayIntersects.length && rayIntersects[0].distance <= bounds;
+        var intersects = rayIntersects && rayIntersects.distance <= bounds;
         if (intersects){
             return true;                
         }

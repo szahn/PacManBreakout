@@ -1,3 +1,6 @@
+var scene = require("./scene");
+var player = require("./player");
+var level = require("./level");
 class GameState{
     constructor(){
         this.state = 0;
@@ -17,6 +20,16 @@ class GameState{
     
     pause(){
         this.state = 4;
+    }
+    
+    restartLevel(){
+        this.state = 5;
+        scene.reset();
+        player.reset();
+        level.reset();
+        level.makeLevel("assets/level1.json").then(()=>{
+            this.state = 1;            
+        });
     }
     
 }

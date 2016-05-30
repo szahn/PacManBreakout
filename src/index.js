@@ -21,8 +21,6 @@ hud.init();
 hud.draw();
 
 Promise.all([textures.load(), assetCache.load(), sounds.load()]).then(()=>{
-    var alight = new THREE.AmbientLight(0x555555, .25);
-    scene.add( alight );     
     level.makeLevel("assets/level1.json").then(()=>{
         GameInput.listen($(window));
         gamepad.listen();

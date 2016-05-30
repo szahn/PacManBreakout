@@ -41,6 +41,7 @@ class GameLoop {
                 sounds.play("hurt");
                 if (player.powerTimer > 0){
                     scene.remove(ghoul);
+                    scene.remove(ghoul.children[0]);
                     delete ghouls[i];
                     continue;
                 }
@@ -59,15 +60,16 @@ class GameLoop {
             }
             
             if (!floors.length){
-                //scene.remove(ghoul);
-                //delete ghouls[i];
+                scene.remove(ghoul);
+                scene.remove(ghoul.children[0]);
+                delete ghouls[i];
                 continue;
             }
                
             if (player.isAlive){
                 let playerDiffX = Math.abs(player.objects.mesh.position.x - ghoul.position.x)
                 let playerDiffY = Math.abs(player.objects.mesh.position.y - ghoul.position.y);
-                if (playerDiffX < 2 && playerDiffY < 2){
+                if (playerDiffX < 2 && playerDiffY < 1){
                     if (playerDiffY < playerDiffX){
                         if (player.objects.mesh.position.x < ghoul.position.x){
                             ghoul.userData.nextDirection = 3;
@@ -152,6 +154,7 @@ class GameLoop {
                 let gX = parseFloat((ghoul.position.x + vX).toFixed(2));
                 let gY = parseFloat((ghoul.position.y + vY).toFixed(2));
 
+                ghoul.children[0].position.set(gX, gY, ghoul.children[0].position.z);
                 ghoul.position.set(gX, gY,ghoul.position.z);
                 ghoul.userData.box = new THREE.Box3().setFromObject(ghoul);
             }
@@ -175,6 +178,8 @@ class GameLoop {
                     }
                     
                     ghoul.material.color = new THREE.Color(1,0,0);
+                    ghoul.children[0].color = new THREE.Color(1,0,0);
+
                 }
             }
         }
@@ -291,16 +296,14 @@ class GameLoop {
     }
     
     tick(ticks){
-        if (this.coinAnimTimer <= 0){
-            this.coinAnimTimer = 1;
-            scene.selectAllCollections("coins").forEach((t)=>{
-                t.rotateX(14 * ticks);
-                t.rotateY(-14 * ticks);
-            });
+        if (gameState.state === 5){
+            return;
         }
-        else{
-            this.coinAnimTimer -= 5 *ticks;
-        }
+
+        scene.selectAllCollections("coins").forEach((t)=>{
+            t.rotateX(1 * ticks);
+            t.rotateY(-1 * ticks);
+        });
 
         if (gameState.state !== 1){
             return;
@@ -322,16 +325,16 @@ class GameLoop {
 
     render() {            
         this.clock = new THREE.Clock(true);            
+        this.tick(this.clock.getDelta());
         if (gameState.state === 1){
-            this.tick(this.clock.getDelta());
             renderer.render(scene, camera);
         }
         requestAnimationFrame(this.renderX.bind(this));
     }
     
     renderX(){
+        this.tick(this.clock.getDelta());
         if (gameState.state === 1){
-            this.tick(this.clock.getDelta());
             renderer.render(scene, camera);
         }
         requestAnimationFrame(this.renderX.bind(this));

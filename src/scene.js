@@ -9,6 +9,21 @@ class Scene extends THREE.Scene{
         this.groups = {};
     }    
     
+    reset(){
+        while (this.children.length){
+            this.remove(this.children.pop());
+        }
+        
+        this.root = {
+            floors: [],
+            ghouls: []
+        }
+        
+        this.groups = {};        
+        
+        this.add(new THREE.AmbientLight(0x444444, .2));     
+    }
+    
     getEmptyGroup(){
         return {
             walls: [],
