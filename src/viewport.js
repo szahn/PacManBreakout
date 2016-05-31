@@ -12,7 +12,7 @@ class Viewport{
     
     onResizeAutoAdjust(){
         this.size = this.getSize();
-        $(window).resize(function() {
+        $(window).resize(() => {
             this.size = this.getSize();
             var aspect = this.size.width / this.size.height;
             /*if (camera) {

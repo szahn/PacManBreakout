@@ -21,7 +21,7 @@ class Scene extends THREE.Scene{
         
         this.groups = {};        
         
-        this.add(new THREE.AmbientLight(0x444444, .2));     
+        this.add(new THREE.AmbientLight(0x666666, .3));     
     }
     
     getEmptyGroup(){

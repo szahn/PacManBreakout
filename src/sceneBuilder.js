@@ -22,7 +22,7 @@ class SceneBuilder {
     makeCoin(groupId, x, y, z, color, isPowerup){
         var geometry = new THREE.TorusGeometry( 10, 4, 14, 24 );
         geometry.scale(.01, .01, .01);
-        var material = new THREE.MeshPhongMaterial( { color: color, shading: THREE.SmoothShading, shininess: 50} );
+        var material = new THREE.MeshPhongMaterial( { color: color, shading: THREE.SmoothShading, shininess: 0} );
         var coin  = new THREE.Mesh( geometry, material );
         coin.name = isPowerup ? "powerup" : "coin";
         coin.position.set(x, y, z);
@@ -32,7 +32,7 @@ class SceneBuilder {
     
     makeSphere(name, x, y, z, color){
         var geometry = new THREE.SphereGeometry( .16, 16, 16 );
-        var material = new THREE.MeshPhongMaterial( {color: color, shading: THREE.SmoothShading, shininess: 50} );
+        var material = new THREE.MeshPhongMaterial( {color: color, shading: THREE.SmoothShading, shininess: 0} );
         var sphere = new THREE.Mesh( geometry, material );
         sphere.position.set(x, y, z);
         sphere.name = name;
@@ -42,8 +42,8 @@ class SceneBuilder {
     }
     
     makePointLight(x, y, color, size){
-        var plight = new THREE.PointLight( color, 5, size);
-        plight.position.set( x, y, .5);
+        var plight = new THREE.PointLight( color, 4, size);
+        plight.position.set( x, y, .25);
         scene.register( plight );    
         return plight;
     }

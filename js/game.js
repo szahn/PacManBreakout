@@ -1336,7 +1336,7 @@
 
 	            this.groups = {};
 
-	            this.add(new THREE.AmbientLight(0x444444, .2));
+	            this.add(new THREE.AmbientLight(0x666666, .3));
 	        }
 	    }, {
 	        key: "getEmptyGroup",
@@ -1693,7 +1693,7 @@
 	                                    var portalIndex = parseInt(cellId[1], 10);
 	                                    sceneBuilder.makePortal(floorId, cellId, sceneX, sceneY, .12, portalColors[portalIndex]);
 	                                } else if (cellId == 2) {
-	                                    sceneBuilder.makeCoin(floorId, sceneX, sceneY, 0, 0x00ffdf, true);
+	                                    sceneBuilder.makeCoin(floorId, sceneX, sceneY, 0, 0xff00ff, true);
 	                                } else if (cellId == 3) {
 	                                    sceneBuilder.makeBot(floorId, sceneX, sceneY);
 	                                } else if (cellId === "p") {
@@ -7771,10 +7771,12 @@
 	    }, {
 	        key: "onResizeAutoAdjust",
 	        value: function onResizeAutoAdjust() {
+	            var _this = this;
+
 	            this.size = this.getSize();
 	            $(window).resize(function () {
-	                this.size = this.getSize();
-	                var aspect = this.size.width / this.size.height;
+	                _this.size = _this.getSize();
+	                var aspect = _this.size.width / _this.size.height;
 	                /*if (camera) {
 	                    camera.aspect = aspect;
 	                    camera.updateProjectionMatrix();
@@ -9294,7 +9296,7 @@
 	        value: function makeCoin(groupId, x, y, z, color, isPowerup) {
 	            var geometry = new THREE.TorusGeometry(10, 4, 14, 24);
 	            geometry.scale(.01, .01, .01);
-	            var material = new THREE.MeshPhongMaterial({ color: color, shading: THREE.SmoothShading, shininess: 50 });
+	            var material = new THREE.MeshPhongMaterial({ color: color, shading: THREE.SmoothShading, shininess: 0 });
 	            var coin = new THREE.Mesh(geometry, material);
 	            coin.name = isPowerup ? "powerup" : "coin";
 	            coin.position.set(x, y, z);
@@ -9305,7 +9307,7 @@
 	        key: "makeSphere",
 	        value: function makeSphere(name, x, y, z, color) {
 	            var geometry = new THREE.SphereGeometry(.16, 16, 16);
-	            var material = new THREE.MeshPhongMaterial({ color: color, shading: THREE.SmoothShading, shininess: 50 });
+	            var material = new THREE.MeshPhongMaterial({ color: color, shading: THREE.SmoothShading, shininess: 0 });
 	            var sphere = new THREE.Mesh(geometry, material);
 	            sphere.position.set(x, y, z);
 	            sphere.name = name;
@@ -9316,8 +9318,8 @@
 	    }, {
 	        key: "makePointLight",
 	        value: function makePointLight(x, y, color, size) {
-	            var plight = new THREE.PointLight(color, 5, size);
-	            plight.position.set(x, y, .5);
+	            var plight = new THREE.PointLight(color, 4, size);
+	            plight.position.set(x, y, .25);
 	            scene.register(plight);
 	            return plight;
 	        }
@@ -10197,7 +10199,7 @@
 	                        }
 	                    } else if (coin.name === "powerup") {
 	                        sounds.play("powerup");
-	                        player.powerTimer += 15;
+	                        player.powerTimer += 20;
 
 	                        var ghouls = scene.root.ghouls;
 	                        for (var _i = 0; _i < ghouls.length; _i++) {

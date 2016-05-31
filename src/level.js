@@ -61,7 +61,7 @@ class Level{
                                 sceneBuilder.makePortal(floorId, cellId, sceneX, sceneY, .12, portalColors[portalIndex]);
                             }
                             else if (cellId == 2){
-                                sceneBuilder.makeCoin(floorId, sceneX, sceneY, 0, 0x00ffdf, true);
+                                sceneBuilder.makeCoin(floorId, sceneX, sceneY, 0, 0xff00ff, true);
                             }
                             else if (cellId == 3){
                                 sceneBuilder.makeBot(floorId, sceneX, sceneY);

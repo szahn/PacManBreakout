@@ -79,7 +79,7 @@ class Collision {
                 }
                 else if (coin.name ==="powerup"){
                     sounds.play("powerup");
-                    player.powerTimer += 15;
+                    player.powerTimer += 20;
                     
                     let ghouls = scene.root.ghouls;
                     for (let i = 0; i < ghouls.length; i++){
